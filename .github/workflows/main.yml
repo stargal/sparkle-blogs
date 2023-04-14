@@ -21,7 +21,7 @@ jobs:
         secret_key: ${{ secrets.QINIU_SECRET_KEY }}
 
         # Bucket name, required.
-        bucket: ${{ secrets.QINIU_BUCKET }}
+        bucket: ${{ secrets.QINIU_BUCKET_NAME }}
 
         # The local directory (or file) you want to upload to bucket.
         # Default: './'
