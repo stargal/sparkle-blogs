@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
     - uses: hujiulong/action-qiniu-upload@master
       with:
         # Your qiniu access key, required.
