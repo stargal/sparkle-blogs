@@ -39,15 +39,22 @@ jobs:
           const putExtra = new qiniu.form_up.PutExtra();
 
           //删除原先的bucket下面的文件
-          const bucketManager = new qiniu.rs.BucketManager(mac, config);
-          const delOps = qiniu.rs.deletePrefix(bucket, prefix);
-          bucketManager.batch(delOps, function(err, respBody, respInfo) {
+          bucketManager.listPrefix(bucket, {prefix: prefix}, function(err, respBody, respInfo) {
             if (err) {
               console.log(err);
               throw err;
-            } else {
-              console.log(respInfo.statusCode);
             }
+
+            const filesToDelete = respBody.items.map(item => qiniu.rs.deleteOp(bucket, item.key));
+
+            bucketManager.batch(filesToDelete, function(err, respBody, respInfo) {
+              if (err) {
+                console.log(err);
+                throw err;
+              }
+
+            console.log('All files deleted!');
+            });
           });
 
           const fileList = [];
