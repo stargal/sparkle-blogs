@@ -13,14 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: install hugo
-      run: |
-        go install github.com/gohugoio/hugo@latest
-        hugo version
-
-    - name: build hugo site
-      run: hugo -D
-
     - uses: hujiulong/action-qiniu-upload@master
       with:
         # Your qiniu access key, required.
