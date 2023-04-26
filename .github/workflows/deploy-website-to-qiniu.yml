@@ -57,6 +57,7 @@ jobs:
                 }
 
                 console.log('All files deleted!');
+                uploadFiles();
               });
             });
           }
@@ -100,5 +101,4 @@ jobs:
           }
 
           deleteFiles();
-          uploadFiles();
           "
