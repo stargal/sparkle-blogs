@@ -1,20 +1,20 @@
 name: Upload to Qiniu
 on:
-  push:
+  push: # 监听 push 事件
     branches:
       - main
 
 jobs:
   upload:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # 选择运行环境为 Ubuntu
     steps:
-      - name: Checkout code
+      - name: Checkout code # 检出仓库代码
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install dependencies # 安装依赖
         run: npm install qiniu
 
-      - name: Upload to Qiniu
+      - name: Upload to Qiniu # 上传到七牛云
         env:
           ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
           SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}
@@ -37,6 +37,19 @@ jobs:
           config.zone = qiniu.zone.Zone_z0;
           const formUploader = new qiniu.form_up.FormUploader(config);
           const putExtra = new qiniu.form_up.PutExtra();
+
+          //删除原先的bucket下面的文件
+          const bucketManager = new qiniu.rs.BucketManager(mac, config);
+          const delOps = qiniu.rs.deletePrefix(bucket, prefix);
+          bucketManager.batch(delOps, function(err, respBody, respInfo) {
+            if (err) {
+              console.log(err);
+              throw err;
+            } else {
+              console.log(respInfo.statusCode);
+            }
+          });
+
           const fileList = [];
 
           function walkDir(dir) {
@@ -65,6 +78,7 @@ jobs:
                 if (err) {
                   reject(err);
                 } else {
+                  console.log(`[${key}] uploaded`);
                   resolve();
                 }
               });
